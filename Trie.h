@@ -46,50 +46,40 @@ BasicTrie::BasicTrie() {
     trie.push_back(root);
 }
 
+// 0 -> fail
+// >0 -> index of the word in the dictionary
 unsigned int BasicTrie::find(string word) {
-    return 0;
+    int len = word.length();
+    unsigned int result_index;
+    BasicTrieNode* node = trie.at(0);
+
+    for (int j = 0; j < len; j++) {
+        char c = word[j];
+
+        // leaf node
+        if (node->letters.size() == 0) {
+            return 0;
+        }
+        // binary search
+        vector<char>::iterator pos = lower_bound(node->letters.begin(), node->letters.end(),c);
+        result_index = pos - node->letters.begin();
+        // check index out of range
+        if (result_index > node->letters.size()-1) {
+            return 0;
+        }
+        // get char and check the match
+        char result = node->letters.at(result_index);
+        if (result != c) {
+            return 0;
+        }
+        // jump to child
+        node = trie.at(node->children.at(result_index));
+    }
+
+    return node->index;
 }
 
-//void BasicTrie::insert(string word, unsigned int index) {
-//
-//    int len = word.length();
-//    BasicTrieNode* node = trie[0];
-//    BasicTrieNode* child = nullptr;
-//
-//    for (int j = 0; j < len; j++) {
-//        char c = word[j];
-//
-//        // linear in alpha
-//        // here we need i binary search
-//        int size = node->children.size();
-//        int pos;
-//        for (pos = 0; pos < size; pos++) {
-//            child = trie.at(node->children.at(pos));
-//            if(c <= child->letter) {
-//                break;
-//            }
-//        }
-//
-//        if (child == nullptr) {
-//
-//            child = new BasicTrieNode(c);
-//            trie.push_back(child);
-//            node->children.push_back(trie.size()-1);
-//
-//        } else if (c != child->letter) {
-//            child = new BasicTrieNode(c);
-//            trie.push_back(child);
-//            node->children.insert(node->children.begin()+pos, trie.size()-1);
-//
-//        }
-//        node = child;
-//        child = nullptr;
-//
-//    }
-//    node->index = index;
-//
-//}
-
+// index in the dictionary must start from one (zero excluded)
 void BasicTrie::insert(string word, unsigned int index) {
 
     int len = word.length();

@@ -12,6 +12,8 @@ int main() {
     trie.insert("pa",20);
     trie.insert("pim",30);
 
-    cout << "Hello, World!" << endl;
+    unsigned int res = trie.find("pz");
+
+    cout << "Hello, World!" << res << endl;
     return 0;
 }
