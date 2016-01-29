@@ -36,6 +36,7 @@ class BasicTrie {
     vector<BasicTrieNode*> trie;
 public:
     BasicTrie();
+    vector<BasicTrieNode*> getTrieVector();
     void insert(string word, unsigned int index);
     unsigned int find(string word);
     //array<unsigned int,2> prefix(string word);
@@ -44,6 +45,10 @@ public:
 BasicTrie::BasicTrie() {
     BasicTrieNode* root = new BasicTrieNode();
     trie.push_back(root);
+}
+
+vector<BasicTrieNode*> BasicTrie::getTrieVector() {
+    return trie;
 }
 
 // 0 -> fail
