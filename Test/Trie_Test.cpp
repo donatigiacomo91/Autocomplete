@@ -4,7 +4,7 @@
 #include "catch.hpp"
 #include "../Trie.h"
 
-TEST_CASE( "Basic Trie One Word", "[trie]" ) {
+TEST_CASE( "Basic Trie One Word Insertion", "[trie]" ) {
     BasicTrie trie;
     trie.insert("pippo",99);
     vector<BasicTrieNode*> vec = trie.getTrieVector();
@@ -18,7 +18,7 @@ TEST_CASE( "Basic Trie One Word", "[trie]" ) {
     REQUIRE(vec.at(5)->index == 99);
 }
 
-TEST_CASE( "Basic Trie Two Word", "[trie]" ) {
+TEST_CASE( "Basic Trie Two Word Insertion", "[trie]" ) {
     BasicTrie trie;
     trie.insert("pi",99);
     trie.insert("pa",44);
@@ -38,4 +38,15 @@ TEST_CASE( "Basic Trie Two Word", "[trie]" ) {
     REQUIRE(vec[left_child]->index == 44);
     REQUIRE(vec[right_child]->index == 99);
 
+}
+
+TEST_CASE( "Basic Trie Two Word Find", "[trie]" ) {
+    BasicTrie trie;
+    trie.insert("pippo", 99);
+    trie.insert("pluto", 44);
+
+    REQUIRE(trie.find("pip") == 0);
+    REQUIRE(trie.find("pippo") == 99);
+    REQUIRE(trie.find("pippopluto") == 0);
+    REQUIRE(trie.find("pluto") == 44);
 }

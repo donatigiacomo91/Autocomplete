@@ -99,8 +99,12 @@ void BasicTrie::insert(string word, unsigned int index) {
         if (node->letters.size() > 0) {
             vector<char>::iterator pos = lower_bound(node->letters.begin(), node->letters.end(),c);
 
+            char result = '\0';
             result_index = pos - node->letters.begin();
-            char result = node->letters.at(result_index);
+            if (result_index <= node->letters.size()-1) {
+                result = node->letters.at(result_index);
+            }
+
 
             if (result != c) {
                 next_node = new BasicTrieNode();

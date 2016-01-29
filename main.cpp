@@ -8,11 +8,10 @@ using namespace std;
 
 int main() {
     BasicTrie trie;
-    trie.insert("pi",10);
-    trie.insert("pa",20);
-    trie.insert("pim",30);
+    trie.insert("pippo", 99);
+    trie.insert("pluto", 44);
 
-    unsigned int res = trie.find("pz");
+    unsigned int res = trie.find("pip");
 
     cout << "Hello, World!" << res << endl;
     return 0;
