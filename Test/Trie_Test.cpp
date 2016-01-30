@@ -50,3 +50,35 @@ TEST_CASE( "Basic Trie Two Word Find", "[trie]" ) {
     REQUIRE(trie.find("pippopluto") == 0);
     REQUIRE(trie.find("pluto") == 44);
 }
+
+TEST_CASE( "Basic Trie simulate slide n.24 Lez3-4-5.pdf", "[trie]") {
+    BasicTrie trie;
+    trie.insert("ab",1);
+    trie.insert("bab",2);
+    trie.insert("bca",3);
+    trie.insert("cab",4);
+    trie.insert("cac",5);
+    trie.insert("cbac",6);
+    trie.insert("cbba",7);
+
+    array<unsigned int,2> result = trie.prefix("c");
+    REQUIRE(result[0] == 4);
+    REQUIRE(result[1] == 7);
+
+    result = trie.prefix("ca");
+    REQUIRE(result[0] == 4);
+    REQUIRE(result[1] == 5);
+
+    result = trie.prefix("cbac");
+    REQUIRE(result[0] == 6);
+    REQUIRE(result[1] == 6);
+
+    result = trie.prefix("cbacd");
+    REQUIRE(result[0] == 0);
+    REQUIRE(result[1] == 0);
+
+    result = trie.prefix("cz");
+    REQUIRE(result[0] == 0);
+    REQUIRE(result[1] == 0);
+
+}
