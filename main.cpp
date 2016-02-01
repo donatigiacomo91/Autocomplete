@@ -6,19 +6,38 @@
 
 using namespace std;
 
+void gen_random(char *s, const int len) {
+    static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz";
+
+    for (int i = 0; i < len; ++i) {
+        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    s[len] = 0;
+}
+
 int main() {
 
     BasicTrie<char,unsigned int> trie;
-    trie.insert("ab",2,1);
-    trie.insert("bab",3,2);
-    trie.insert("bca",3,3);
-    trie.insert("cab",3,4);
-    trie.insert("cac",3,5);
-    trie.insert("cbac",4,6);
-    trie.insert("cbba",4,7);
+    char str[11];
 
-    array<unsigned int,2> result = trie.prefix("b",1);
+    long dic_size = 0;
+    for(int i=1; i < 1000; i++) {
+        int len = rand() % 8 + 3;
+        dic_size = dic_size + len;
+        gen_random(str,len);
+        trie.insert(str,len,i);
+    }
+    // convert to bit
+    dic_size = dic_size*8;
 
-    cout << "Hello, World!" << endl;
+    long trie_size = 0;
+    vector<BasicTrieNode<char,unsigned int>*> vec = trie.getTrieVector();
+    for (int j = 0; j < vec.size(); ++j) {
+        trie_size = trie_size + vec[j]->get_size();
+    }
+
+
+    cout << dic_size << endl << trie_size << endl << vec.size() << endl;
     return 0;
 }

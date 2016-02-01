@@ -2,7 +2,6 @@
 // Created by Giacomo Donati on 27/01/16.
 //
 
-#include <string>
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -32,6 +31,21 @@ public:
         index = 0;
         most_left = (Pointer_t) UINT64_MAX;
         most_right = 0;
+    }
+
+    long get_size() {
+        long total_size = 0;
+        total_size += sizeof(index);
+
+        total_size += (sizeof(Pointer_t)*children.size());
+        total_size += (sizeof(Alphabet_t)*letters.size());
+
+        total_size += sizeof(most_left);
+        total_size += sizeof(most_right);
+
+        total_size = total_size * 8;
+
+        return total_size;
     }
 
 };
