@@ -5,9 +5,9 @@
 #include "../Trie.h"
 
 TEST_CASE( "Basic Trie One Word Insertion", "[trie]" ) {
-    BasicTrie trie;
-    trie.insert("pippo",99);
-    vector<BasicTrieNode*> vec = trie.getTrieVector();
+    BasicTrie<char,unsigned int> trie;
+    trie.insert("pippo",5,99);
+    vector<BasicTrieNode<char,unsigned int>*> vec = trie.getTrieVector();
 
     REQUIRE(vec.size() == 6);
     REQUIRE(vec.at(0)->letters.at(0) == 'p');
@@ -19,10 +19,10 @@ TEST_CASE( "Basic Trie One Word Insertion", "[trie]" ) {
 }
 
 TEST_CASE( "Basic Trie Two Word Insertion", "[trie]" ) {
-    BasicTrie trie;
-    trie.insert("pi",99);
-    trie.insert("pa",44);
-    vector<BasicTrieNode*> vec = trie.getTrieVector();
+    BasicTrie<char,unsigned int> trie;
+    trie.insert("pi",2,99);
+    trie.insert("pa",2,44);
+    vector<BasicTrieNode<char,unsigned int>*> vec = trie.getTrieVector();
 
     REQUIRE(vec.size() == 4);
 
@@ -41,43 +41,43 @@ TEST_CASE( "Basic Trie Two Word Insertion", "[trie]" ) {
 }
 
 TEST_CASE( "Basic Trie Two Word Find", "[trie]" ) {
-    BasicTrie trie;
-    trie.insert("pippo", 99);
-    trie.insert("pluto", 44);
+    BasicTrie<char,int> trie;
+    trie.insert("pippo",5,99);
+    trie.insert("pluto",5,44);
 
-    REQUIRE(trie.find("pip") == 0);
-    REQUIRE(trie.find("pippo") == 99);
-    REQUIRE(trie.find("pippopluto") == 0);
-    REQUIRE(trie.find("pluto") == 44);
+    REQUIRE(trie.find("pip",3) == 0);
+    REQUIRE(trie.find("pippo",5) == 99);
+    REQUIRE(trie.find("pippopluto",10) == 0);
+    REQUIRE(trie.find("pluto",5) == 44);
 }
 
 TEST_CASE( "Basic Trie simulate slide n.24 Lez3-4-5.pdf", "[trie]") {
-    BasicTrie trie;
-    trie.insert("ab",1);
-    trie.insert("bab",2);
-    trie.insert("bca",3);
-    trie.insert("cab",4);
-    trie.insert("cac",5);
-    trie.insert("cbac",6);
-    trie.insert("cbba",7);
+    BasicTrie<char,unsigned int> trie;
+    trie.insert("ab",2,1);
+    trie.insert("bab",3,2);
+    trie.insert("bca",3,3);
+    trie.insert("cab",3,4);
+    trie.insert("cac",3,5);
+    trie.insert("cbac",4,6);
+    trie.insert("cbba",4,7);
 
-    array<unsigned int,2> result = trie.prefix("c");
+    array<unsigned int,2> result = trie.prefix("c",1);
     REQUIRE(result[0] == 4);
     REQUIRE(result[1] == 7);
 
-    result = trie.prefix("ca");
+    result = trie.prefix("ca",2);
     REQUIRE(result[0] == 4);
     REQUIRE(result[1] == 5);
 
-    result = trie.prefix("cbac");
+    result = trie.prefix("cbac",4);
     REQUIRE(result[0] == 6);
     REQUIRE(result[1] == 6);
 
-    result = trie.prefix("cbacd");
+    result = trie.prefix("cbacd",5);
     REQUIRE(result[0] == 0);
     REQUIRE(result[1] == 0);
 
-    result = trie.prefix("cz");
+    result = trie.prefix("cz",2);
     REQUIRE(result[0] == 0);
     REQUIRE(result[1] == 0);
 
