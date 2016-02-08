@@ -14,10 +14,12 @@ namespace tst {
     public:
         A character;
         P left, middle, right;
-        D index = 0;
+        D index;
 
-        Node(const A* c) {
-            character = *c;
+        Node(const A c) {
+            character = c;
+            left = middle = right = 0;
+            index = 0;
         }
     };
 
@@ -25,59 +27,66 @@ namespace tst {
     class Tree {
         std::vector<Node<A,P,D>*> vec;
 
-        P insert(P, const A*, const D);
+        void insert(const A*, const D);
         void create(const std::vector<const A*>&, P, P);
 
     public:
         Tree(const std::vector<const A*>& dic){
 
-            if (dic.size() <= 1) {
+            if (dic.size() < 2) {
                 return ;
             }
-            vec.push_back(nullptr);
 
-            D root_index = dic.size()/2;
-            insert(0, dic[root_index], root_index);
-
-            create(dic, 1, root_index);
-            create(dic, root_index+1, dic.size());
+            // dic[0] is ignored, index 0 means no string
+            create(dic, 1, dic.size());
 
         }
     };
 
     template<typename A, typename P, typename D>
-    P Tree<A,P,D>::insert(P node_index, const A* word, const D dic_index) {
+    void Tree<A,P,D>::insert(const A* word, const D dic_index) {
 
         Node<A,P,D>* node;
+        Node<A,P,D>* next_node;
+        uint16_t i = 0;
 
-        if (node_index == 0) {
-            node = new Node<A,P,D>(word);
-            node->left = 0;
-            node->middle = 0;
-            node->right = 0;
-
-            vec.push_back(node);
-            node_index = vec.size()-1;
-        } else {
-            node = vec[node_index];
+        if (vec.size() == 0) {
+            vec.push_back(new Node<A,P,D>(word[i]));
         }
+        node = vec[0];
 
-        if (*word < node->character) {
-            node->left = insert(node->left, word, dic_index);
-        }
-        else if (*word == node->character) {
 
-            if (*word != 0) {
-                node->middle = insert(node->middle, ++word, dic_index);
-            } else {
-                node->index = dic_index;
+        while (word[i] != 0) {
+
+            if (word[i] < node->character) {
+                if (node->left == 0) {
+                    vec.push_back(new Node<A,P,D>(word[i]));
+                    node->left = (P) vec.size()-1;
+                }
+                node = vec[node->left];
+            }
+            else if (word[i] == node->character) {
+                if (node->middle == 0) {
+                    if (word[i+1] == 0) {
+                        node->index = dic_index;
+                        return;
+                    }
+                    vec.push_back(new Node<A,P,D>(word[i+1]));
+                    node->middle = (P) vec.size()-1;
+                }
+                node = vec[node->middle];
+            }
+            else {
+                if (node->right == 0) {
+                    vec.push_back(new Node<A,P,D>(word[i]));
+                    node->right = (P) vec.size()-1;
+                }
+                node = vec[node->right];
             }
 
-        } else {
-            node->right = insert(node->right, word, dic_index);
+            i++;
         }
-
-        return node_index;
+        node->index = dic_index;
 
     };
 
@@ -86,7 +95,7 @@ namespace tst {
 
         if (min < max) {
             P mid = (min+max)/2;
-            insert(1, dic[mid], mid);
+            insert(dic[mid], mid);
             create(dic, min, mid);
             create(dic, mid+1, max);
         }
