@@ -14,9 +14,9 @@ namespace tst {
     public:
         A character;
         P left, middle, right;
-        D index; // 0 if no word end in the node
+        D index = 0;
 
-        Node(A c) {
+        Node(const A* c) {
             character = *c;
         }
     };
@@ -26,14 +26,15 @@ namespace tst {
         std::vector<Node<A,P,D>*> vec;
 
         P insert(P, const A*, const D);
-        void create(const std::vector<A*>&, P, P);
+        void create(const std::vector<const A*>&, P, P);
 
     public:
-        Tree(const std::vector<A*>& dic){
+        Tree(const std::vector<const A*>& dic){
 
             if (dic.size() <= 1) {
                 return ;
             }
+            vec.push_back(nullptr);
 
             D root_index = dic.size()/2;
             insert(0, dic[root_index], root_index);
@@ -62,7 +63,7 @@ namespace tst {
         }
 
         if (*word < node->character) {
-            node->left = insert(node->left, *word, dic_index);
+            node->left = insert(node->left, word, dic_index);
         }
         else if (*word == node->character) {
 
@@ -73,7 +74,7 @@ namespace tst {
             }
 
         } else {
-            node->right = insert(node->right, *word, dic_index);
+            node->right = insert(node->right, word, dic_index);
         }
 
         return node_index;
@@ -81,7 +82,7 @@ namespace tst {
     };
 
     template<typename A, typename P, typename D>
-    void Tree<A,P,D>::create(const std::vector<A*>& dic, P min, P max) {
+    void Tree<A,P,D>::create(const std::vector<const A*>& dic, P min, P max) {
 
         if (min < max) {
             P mid = (min+max)/2;
