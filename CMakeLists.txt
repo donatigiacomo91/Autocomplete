@@ -7,13 +7,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/Users/giacomo/Desktop/Code/Autocomplete/Bin
 
 set(SOURCE_FILES
         Trie.h
+        TST.h
         main.cpp)
 
 set(SOURCE_FILES2
         Trie.h
+        TST.h
         Test/catch.hpp
         Test/catch_conf.cpp
         Test/Trie_Test.cpp)
 
-add_executable(Autocomplete ${SOURCE_FILES})
-add_executable(AutocompleteTest ${SOURCE_FILES2})
+add_executable(Main ${SOURCE_FILES})
+add_executable(BasicTrieTest ${SOURCE_FILES2})
