@@ -53,8 +53,8 @@ namespace tst {
         if (vec.size() == 0) {
             vec.push_back(new Node<A,P,D>(word[i]));
         }
-        node = vec[0];
 
+        node = vec[0];
 
         while (word[i] != 0) {
 
@@ -64,14 +64,16 @@ namespace tst {
                     node->left = (P) vec.size()-1;
                 }
                 node = vec[node->left];
+
             }
             else if (word[i] == node->character) {
+                i++;
                 if (node->middle == 0) {
-                    if (word[i+1] == 0) {
+                    if (word[i] == 0) {
                         node->index = dic_index;
                         return;
                     }
-                    vec.push_back(new Node<A,P,D>(word[i+1]));
+                    vec.push_back(new Node<A,P,D>(word[i]));
                     node->middle = (P) vec.size()-1;
                 }
                 node = vec[node->middle];
@@ -84,7 +86,7 @@ namespace tst {
                 node = vec[node->right];
             }
 
-            i++;
+
         }
         node->index = dic_index;
 

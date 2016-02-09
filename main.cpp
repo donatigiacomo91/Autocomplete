@@ -40,15 +40,7 @@ int main() {
 //
 //    cout << dic_size << endl << trie_size << endl << vec.size() << endl;
 
-    std::vector<const char*> dic;
-    std::string w0 = "";
-    std::string w1 = "abc";
-    std::string w2 = "abz";
-    std::string w3 = "az";
-    dic.push_back(w0.c_str());
-    dic.push_back(w1.c_str());
-    dic.push_back(w2.c_str());
-    dic.push_back(w3.c_str());
+    std::vector<const char*> dic = {"", "as", "at", "be", "by", "he"};
 
     tst::Tree<char,int,int> tree(dic);
 
