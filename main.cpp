@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <fstream>
 
 #include "TST.h"
 
@@ -40,10 +41,24 @@ int main() {
 //
 //    cout << dic_size << endl << trie_size << endl << vec.size() << endl;
 
-    std::vector<const char*> dic = {"", "as", "at", "be", "by", "he"};
+    std::vector<std::string> strings;
+    strings.reserve(25482);
+    strings.push_back("");
 
-    tst::Tree<char,int,int> tree(dic);
+    std::ifstream file("../dictwords.txt");
+    std::string str;
+    while (std::getline(file, str)) {
+        strings.push_back(str);
+    }
 
+    std::vector<char*> cstrings;
+
+    for(size_t i = 0; i < strings.size(); ++i)
+        cstrings.push_back(const_cast<char*>(strings[i].c_str()));
+
+    tst::Tree<char,int,int> tree(cstrings);
+
+    cout << tree.search("Staten") << endl;
 
     return 0;
 }

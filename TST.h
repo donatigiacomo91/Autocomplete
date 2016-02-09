@@ -28,10 +28,13 @@ namespace tst {
         std::vector<Node<A,P,D>*> vec;
 
         void insert(const A*, const D);
-        void create(const std::vector<const A*>&, P, P);
+        void create(std::vector<A*>&, P, P);
 
     public:
-        Tree(const std::vector<const A*>& dic){
+
+        D search(const A*);
+
+        Tree(std::vector<A*>& dic){
 
             if (dic.size() < 2) {
                 return ;
@@ -41,19 +44,18 @@ namespace tst {
             create(dic, 1, dic.size());
 
         }
+
     };
 
     template<typename A, typename P, typename D>
     void Tree<A,P,D>::insert(const A* word, const D dic_index) {
 
         Node<A,P,D>* node;
-        Node<A,P,D>* next_node;
-        uint16_t i = 0;
+        uint32_t i = 0;
 
         if (vec.size() == 0) {
             vec.push_back(new Node<A,P,D>(word[i]));
         }
-
         node = vec[0];
 
         while (word[i] != 0) {
@@ -93,7 +95,7 @@ namespace tst {
     };
 
     template<typename A, typename P, typename D>
-    void Tree<A,P,D>::create(const std::vector<const A*>& dic, P min, P max) {
+    void Tree<A,P,D>::create(std::vector<A*>& dic, P min, P max) {
 
         if (min < max) {
             P mid = (min+max)/2;
@@ -101,6 +103,41 @@ namespace tst {
             create(dic, min, mid);
             create(dic, mid+1, max);
         }
+    }
+
+    template<typename A, typename P, typename D>
+    D Tree<A,P,D>::search(const A* word) {
+
+        Node<A,P,D>* node = vec[0];
+        uint32_t i = 0;
+
+        while (true) {
+
+            if (word[i] < node->character) {
+                if (node->left == 0) {
+                    return 0;
+                }
+                node = vec[node->left];
+            }
+            else if (word[i] == node->character) {
+                i++;
+                if (word[i] == 0) {
+                    return node->index;
+                }
+                if (node->middle == 0) {
+                    return 0;
+                }
+                node = vec[node->middle];
+            }
+            else {
+                if (node->right == 0) {
+                    return 0;
+                }
+                node = vec[node->right];
+            }
+
+        }
+
     }
 
 }
