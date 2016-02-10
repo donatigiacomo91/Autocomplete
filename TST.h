@@ -21,6 +21,11 @@ namespace tst {
             left = middle = right = 0;
             index = 0;
         }
+
+        size_t size() {
+            return sizeof(A) + sizeof(P)*3 + sizeof(D);
+        }
+
     };
 
     template<typename A, typename P, typename D>
@@ -33,19 +38,34 @@ namespace tst {
     public:
 
         D search(const A*);
+        long node_num();
+        size_t size();
 
         Tree(std::vector<A*>& dic){
-
             if (dic.size() < 2) {
                 return ;
             }
-
             // dic[0] is ignored, index 0 means no string
             create(dic, 1, dic.size());
-
         }
 
     };
+
+    template<typename A, typename P, typename D>
+    long Tree<A,P,D>::node_num() {
+        return vec.size();
+    }
+
+    template<typename A, typename P, typename D>
+    size_t Tree<A,P,D>::size() {
+        size_t total_size = 0;
+
+        total_size += vec.size() * sizeof(Node<A,P,D>);
+        total_size += vec.size() * sizeof(Node<A,P,D>*);
+        total_size += sizeof(vec);
+
+        return total_size;
+    }
 
     template<typename A, typename P, typename D>
     void Tree<A,P,D>::insert(const A* word, const D dic_index) {
