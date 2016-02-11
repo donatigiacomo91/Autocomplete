@@ -38,13 +38,16 @@ namespace tst {
     public:
 
         D search(const A*);
-        long node_num();
+        long node_count(P);
         size_t size();
+        int compact(P);
 
         Tree(std::vector<A*>& dic){
             if (dic.size() < 2) {
                 return ;
             }
+            // root must stay at index 1, index 0 means no child
+            vec.push_back(nullptr);
             // dic[0] is ignored, index 0 means no string
             create(dic, 1, dic.size());
         }
@@ -52,8 +55,54 @@ namespace tst {
     };
 
     template<typename A, typename P, typename D>
-    long Tree<A,P,D>::node_num() {
-        return vec.size();
+    int Tree<A,P,D>::compact(P index) {
+
+        if (index == 0) {
+            return 0;
+        }
+
+        Node<A,P,D>* node = vec[index];
+        if (node->left != 0 || node->right != 0) {
+            compact(node->left);
+            compact(node->middle);
+            compact(node->right);
+            return 0;
+        }
+
+        // leaf node
+        if (node->middle == 0) {
+            return 1;
+        }
+
+        // internal node with only middle child
+        if (int count = compact(node->middle)) {
+            Node<A,P,D>* child = vec[node->middle];
+            node->index = child->index;
+            node->character = '\0';
+            count++;
+            node->middle = count;
+            return count;
+        }
+
+
+    }
+
+    template<typename A, typename P, typename D>
+    long Tree<A,P,D>::node_count(P index) {
+
+        if (index == 0) {
+            return 0;
+        }
+
+        Node<A,P,D>* node = vec[index];
+        if (node->character == '\0') {
+            return 1;
+        }
+        if (node->left == 0 && node->middle == 0 && node->right == 0 ) {
+            return 1;
+        }
+
+        return 1 + node_count(node->left) + node_count(node->middle) + node_count(node->right);
     }
 
     template<typename A, typename P, typename D>
@@ -73,10 +122,10 @@ namespace tst {
         Node<A,P,D>* node;
         uint32_t i = 0;
 
-        if (vec.size() == 0) {
+        if (vec.size() == 1) {
             vec.push_back(new Node<A,P,D>(word[i]));
         }
-        node = vec[0];
+        node = vec[1];
 
         while (word[i] != 0) {
 
@@ -128,7 +177,7 @@ namespace tst {
     template<typename A, typename P, typename D>
     D Tree<A,P,D>::search(const A* word) {
 
-        Node<A,P,D>* node = vec[0];
+        Node<A,P,D>* node = vec[1];
         uint32_t i = 0;
 
         while (true) {
