@@ -54,6 +54,7 @@ namespace tst {
 
     };
 
+    // TODO: this function not remove node from vector
     template<typename A, typename P, typename D>
     int Tree<A,P,D>::compact(P index) {
 
@@ -174,6 +175,7 @@ namespace tst {
         }
     }
 
+    // TODO: to be fixed for work with compact tree
     template<typename A, typename P, typename D>
     D Tree<A,P,D>::search(const A* word) {
 
