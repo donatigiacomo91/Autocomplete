@@ -37,11 +37,9 @@ int main() {
     // build the tree
     tst::Tree<char,int,int> tree(cstrings);
 
+    // print statistics
     cout << "TST have size: " << tree.size() << " byte" << endl;
     cout << "TST have " << tree.node_count(1) / (float) total_char << " nodes per character" << endl;
-
-    tree.compact(1);
-    cout << "after compact TST have " << (float) tree.node_count(1) / (float) total_char << " nodes per character" << endl;
 
     return 0;
 }

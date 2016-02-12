@@ -30,17 +30,18 @@ namespace tst {
 
     template<typename A, typename P, typename D>
     class Tree {
+
         std::vector<Node<A,P,D>*> vec;
 
         void insert(const A*, const D);
         void create(std::vector<A*>&, P, P);
+        int compress(P);
 
     public:
 
         D search(const A*);
         long node_count(P);
         size_t size();
-        int compact(P);
 
         Tree(std::vector<A*>& dic){
             if (dic.size() < 2) {
@@ -54,9 +55,9 @@ namespace tst {
 
     };
 
-    // TODO: this function not remove node from vector
+    // compress unitary path to leaf in one node
     template<typename A, typename P, typename D>
-    int Tree<A,P,D>::compact(P index) {
+    int Tree<A,P,D>::compress(P index) {
 
         if (index == 0) {
             return 0;
@@ -64,9 +65,9 @@ namespace tst {
 
         Node<A,P,D>* node = vec[index];
         if (node->left != 0 || node->right != 0) {
-            compact(node->left);
-            compact(node->middle);
-            compact(node->right);
+            compress(node->left);
+            compress(node->middle);
+            compress(node->right);
             return 0;
         }
 
@@ -76,8 +77,10 @@ namespace tst {
         }
 
         // internal node with only middle child
-        if (int count = compact(node->middle)) {
+        if (int count = compress(node->middle)) {
             Node<A,P,D>* child = vec[node->middle];
+            // mark node as deleted
+            child->middle = -1;
             node->index = child->index;
             node->character = '\0';
             count++;
@@ -85,6 +88,7 @@ namespace tst {
             return count;
         }
 
+        return 0;
 
     }
 
@@ -175,7 +179,7 @@ namespace tst {
         }
     }
 
-    // TODO: to be fixed for work with compact tree
+    // TODO: to be fixed to work with compact tree
     template<typename A, typename P, typename D>
     D Tree<A,P,D>::search(const A* word) {
 
