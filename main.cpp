@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "TST.h"
+#include "TST_P.h"
 
 using namespace std;
 
@@ -30,16 +31,22 @@ int main() {
     cout << "medium word length is : " << medium_len << endl << endl;
 
     // convert to char*
-    std::vector<char*> cstrings;
+    std::vector<const char*> cstrings;
     for(size_t i = 0; i < strings.size(); ++i)
         cstrings.push_back(const_cast<char*>(strings[i].c_str()));
 
     // build the tree
-    tst::Tree<char,int,int> tree(cstrings);
+    tst_p::Tree<char,int> tree(cstrings);
 
     // print statistics
-    cout << "TST have size: " << tree.size() << " byte" << endl;
-    cout << "TST have " << tree.node_count(1) / (float) total_char << " nodes per character" << endl;
+    cout << "TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
+//    cout << "TST have " << tree.node_count(1) << " nodes" << endl;
+
+    tree.compress(tree.getRoot());
+    // print statistics
+    cout << "after compression TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
+//    cout << "TST have " << tree.node_count(1) << " nodes" << endl;
+//    cout << "compressed node are: " << tree.compressed_count() << endl;
 
     return 0;
 }

@@ -35,13 +35,14 @@ namespace tst {
 
         void insert(const A*, const D);
         void create(std::vector<A*>&, P, P);
-        int compress(P);
 
     public:
 
         D search(const A*);
         long node_count(P);
         size_t size();
+        int compress(P);
+        long compressed_count();
 
         Tree(std::vector<A*>& dic){
             if (dic.size() < 2) {
@@ -55,7 +56,19 @@ namespace tst {
 
     };
 
+    // count the number of compressed node
+    template<typename A, typename P, typename D>
+    long Tree<A,P,D>::compressed_count() {
+        auto count = 0;
+        for (auto i=1; i != vec.size(); i++) {
+            if(vec[i]->middle == -1)
+                count++;
+        }
+        return count;
+    }
+
     // compress unitary path to leaf in one node
+    // mark deleted node with node.middle = -1
     template<typename A, typename P, typename D>
     int Tree<A,P,D>::compress(P index) {
 
@@ -92,6 +105,7 @@ namespace tst {
 
     }
 
+    // return the number of node of the subtree rooted in vec[index]
     template<typename A, typename P, typename D>
     long Tree<A,P,D>::node_count(P index) {
 
@@ -110,10 +124,11 @@ namespace tst {
         return 1 + node_count(node->left) + node_count(node->middle) + node_count(node->right);
     }
 
+    // return the size in byte of the whole tree
     template<typename A, typename P, typename D>
     size_t Tree<A,P,D>::size() {
-        size_t total_size = 0;
 
+        size_t total_size = 0;
         total_size += vec.size() * sizeof(Node<A,P,D>);
         total_size += vec.size() * sizeof(Node<A,P,D>*);
         total_size += sizeof(vec);
@@ -121,11 +136,12 @@ namespace tst {
         return total_size;
     }
 
+    // insert a word in the tree
     template<typename A, typename P, typename D>
     void Tree<A,P,D>::insert(const A* word, const D dic_index) {
 
         Node<A,P,D>* node;
-        uint32_t i = 0;
+        auto i = 0;
 
         if (vec.size() == 1) {
             vec.push_back(new Node<A,P,D>(word[i]));
@@ -168,9 +184,10 @@ namespace tst {
 
     };
 
+    // create a balanced tree starting from a sorted dictionary
+    // recursively insert the middle string in the sub-array [min,max]
     template<typename A, typename P, typename D>
     void Tree<A,P,D>::create(std::vector<A*>& dic, P min, P max) {
-
         if (min < max) {
             P mid = (min+max)/2;
             insert(dic[mid], mid);
@@ -180,11 +197,13 @@ namespace tst {
     }
 
     // TODO: to be fixed to work with compact tree
+    // return the index of the word in the dictionary
+    // 0 if the string do not appears
     template<typename A, typename P, typename D>
     D Tree<A,P,D>::search(const A* word) {
 
         Node<A,P,D>* node = vec[1];
-        uint32_t i = 0;
+        auto i = 0;
 
         while (true) {
 
