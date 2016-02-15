@@ -12,10 +12,9 @@ int main() {
 
     std::vector<std::string> strings;
     strings.reserve(25482);
-    strings.push_back("");
 
     // read from dictionary
-    std::ifstream file("../dictwords.txt");
+    std::ifstream file("../dictcalls_s.txt");
     std::string str;
     long total_char = 0;
     long total_word = 0;
@@ -40,13 +39,16 @@ int main() {
 
     // print statistics
     cout << "TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
-//    cout << "TST have " << tree.node_count(1) << " nodes" << endl;
+    cout << "TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
+
+    cout << cstrings[568] << " have index: " << tree.search(cstrings[568]) << endl;
 
     tree.compress(tree.getRoot());
     // print statistics
     cout << "after compression TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
-//    cout << "TST have " << tree.node_count(1) << " nodes" << endl;
-//    cout << "compressed node are: " << tree.compressed_count() << endl;
+    cout << "after compression TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
+
+    cout << cstrings[568] << " have index: " << tree.search(cstrings[568]) << endl;
 
     return 0;
 }

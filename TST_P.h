@@ -41,8 +41,9 @@ namespace tst_p {
     public:
 
         D search(const A*);
-        size_t size(Node<A,D>*);
         bool compress(Node<A,D>*);
+        size_t size(Node<A,D>*);
+        long node_count(Node<A,D>*);
 
         Node<A,D>* getRoot() {
             return root;
@@ -100,12 +101,27 @@ namespace tst_p {
         if (node == nullptr) {
             return 0;
         }
-        
+
         if (node->left == nullptr && node->middle == nullptr && node->right == nullptr ) {
             return node->size();
         }
 
         return node->size() + size(node->left) + size(node->middle) + size(node->right);
+    }
+
+    // return the number of nodes of the subtree rooted in "node"
+    template<typename A,typename D>
+    long Tree<A,D>::node_count(Node<A,D>* node) {
+
+        if (node == nullptr) {
+            return 0;
+        }
+
+        if (node->left == nullptr && node->middle == nullptr && node->right == nullptr) {
+            return 1;
+        }
+
+        return 1 + node_count(node->left) + node_count(node->middle) + node_count(node->right);
     }
 
     // insert a word in the tree
@@ -153,7 +169,7 @@ namespace tst_p {
 
     };
 
-    // create a balanced tree starting from a sorted dictionary
+    // create a balanced tree if we start from a sorted dictionary
     // recursively insert the middle string in the sub-array [min,max]
     template<typename A, typename D>
     void Tree<A,D>::create(D min, D max) {
@@ -175,7 +191,7 @@ namespace tst_p {
 
         while (true) {
 
-            if (node->character == "\0") {
+            if (node->character == '\0') {
                 // special case (compressed unitary path)
                 if (strcmp(word, dictionary[node->index]) == 0) {
                     return node->index;
