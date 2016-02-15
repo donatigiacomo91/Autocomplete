@@ -160,11 +160,11 @@ namespace tst {
             }
             else if (word[i] == node->character) {
                 i++;
+                if (word[i] == 0) {
+                    node->index = dic_index;
+                    return;
+                }
                 if (node->middle == 0) {
-                    if (word[i] == 0) {
-                        node->index = dic_index;
-                        return;
-                    }
                     vec.push_back(new Node<A,P,D>(word[i]));
                     node->middle = (P) vec.size()-1;
                 }

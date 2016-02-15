@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
 #include <fstream>
 
@@ -11,10 +10,10 @@ using namespace std;
 int main() {
 
     std::vector<std::string> strings;
-    strings.reserve(25482);
+    strings.reserve(50000);
 
     // read from dictionary
-    std::ifstream file("../dictcalls_s.txt");
+    std::ifstream file("../dicttest.txt");
     std::string str;
     long total_char = 0;
     long total_word = 0;
@@ -31,6 +30,7 @@ int main() {
 
     // convert to char*
     std::vector<const char*> cstrings;
+    cstrings.reserve(50000);
     for(size_t i = 0; i < strings.size(); ++i)
         cstrings.push_back(const_cast<char*>(strings[i].c_str()));
 
@@ -41,14 +41,14 @@ int main() {
     cout << "TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
     cout << "TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
 
-    cout << cstrings[568] << " have index: " << tree.search(cstrings[568]) << endl;
+    cout << cstrings[0] << " have index: " << tree.search(cstrings[0]) << endl;
 
     tree.compress(tree.getRoot());
     // print statistics
     cout << "after compression TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
     cout << "after compression TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
 
-    cout << cstrings[568] << " have index: " << tree.search(cstrings[568]) << endl;
+    cout << cstrings[3] << " have index: " << tree.search(cstrings[3]) << endl;
 
     return 0;
 }

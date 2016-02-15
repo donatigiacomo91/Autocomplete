@@ -147,11 +147,11 @@ namespace tst_p {
             }
             else if (word[i] == node->character) {
                 i++;
+                if (word[i] == 0) {
+                    node->index = dic_index;
+                    return;
+                }
                 if (node->middle == nullptr) {
-                    if (word[i] == 0) {
-                        node->index = dic_index;
-                        return;
-                    }
                     node->middle = new Node<A,D>(word[i]);
                 }
                 node = node->middle;
