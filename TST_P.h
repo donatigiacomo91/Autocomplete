@@ -5,6 +5,7 @@
 #ifndef AUTOCOMPLETE_TST_P_H
 #define AUTOCOMPLETE_TST_P_H
 
+#include <array>
 #include <vector>
 #include <string.h>
 
@@ -17,14 +18,19 @@ namespace tst_p {
         D index;
         Node<A,D> *left, *middle, *right;
 
+        D most_left_index;
+        D most_right_index;
+
         Node(const A c) {
             character = c;
             left = middle = right = nullptr;
             index = -1;
+            most_left_index = std::numeric_limits<D>::max();
+            most_right_index = -1;
         }
 
         size_t size() {
-            return sizeof(A) + sizeof(Node<A,D>*)*3 + sizeof(D);
+            return sizeof(A) + sizeof(Node<A,D>*)*3 + sizeof(D)*3;
         }
 
     };
@@ -32,6 +38,8 @@ namespace tst_p {
     template<typename A,typename D>
     class Tree {
 
+        // dictionary must be sorted
+        // otherwise we don't have elements with the same prefix contiguous
         std::vector<const A*> dictionary;
         Node<A,D>* root = nullptr;
 
@@ -40,7 +48,8 @@ namespace tst_p {
 
     public:
 
-        D search(const A*);
+        Node<A,D>* search(const A*);
+        std::array<D,2> prefix(const A*);
         bool compress(Node<A,D>*);
         size_t size(Node<A,D>*);
         long node_count(Node<A,D>*);
@@ -57,6 +66,7 @@ namespace tst_p {
     };
 
 
+    // TODO: compress also inner unitary path
     // compress the tree rooted in node by
     // compressing unitary path to leaf in one node (cutting the linear subtree)
     // mark the compressed leaf node with the special '\0' char
@@ -138,6 +148,9 @@ namespace tst_p {
 
         while (word[i] != 0) {
 
+            node->most_left_index = std::min(dic_index, node->most_left_index);
+            node->most_right_index = std::max(dic_index, node->most_right_index);
+
             if (word[i] < node->character) {
                 if (node->left == nullptr) {
                     node->left = new Node<A,D>(word[i]);
@@ -184,7 +197,7 @@ namespace tst_p {
     // return the index of the word in the dictionary
     // -1 if the string do not appears
     template<typename A,typename D>
-    D Tree<A,D>::search(const A* word) {
+    Node<A,D>* Tree<A,D>::search(const A* word) {
 
         Node<A,D>* node = root;
         auto i = 0;
@@ -194,36 +207,60 @@ namespace tst_p {
             if (node->character == '\0') {
                 // special case (compressed unitary path)
                 if (strcmp(word, dictionary[node->index]) == 0) {
-                    return node->index;
+                    return node;
                 } else {
-                    return -1;
+                    return nullptr;
                 }
             }
 
             if (word[i] < node->character) {
                 if (node->left == nullptr) {
-                    return -1;
+                    return nullptr;
                 }
                 node = node->left;
             }
             else if (word[i] == node->character) {
                 i++;
                 if (word[i] == 0) {
-                    return node->index;
+                    return node;
                 }
                 if (node->middle == nullptr) {
-                    return -1;
+                    return nullptr;
                 }
                 node = node->middle;
             }
             else {
                 if (node->right == nullptr) {
-                    return -1;
+                    return nullptr;
                 }
                 node = node->right;
             }
 
         }
+
+    }
+
+    template<typename A,typename D>
+    std::array<D,2> Tree<A,D>::prefix(const A* pref) {
+        std::array<D,2> result;
+        Node<A,D>* node = search(pref);
+
+        if (node != nullptr) {
+            // all words prefixed by "pref" are in the middle subtree
+            if (node->middle != nullptr) {
+                result[0] = node->middle->most_left_index;
+                result[1] = node->middle->most_right_index;
+            }
+            // if a word end in the node the range start from the target node
+            if (node->index != -1) {
+                result[0] = node->index;
+            }
+
+            return result;
+
+        }
+
+        return std::array<D,2> {-1,-1};
 
     }
 
