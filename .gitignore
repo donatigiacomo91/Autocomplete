@@ -1,6 +1,7 @@
 .idea/
 Bin/
 dictwords.txt
-dictcalls.txt
+dictwords_lc.txt
+ditcwords_sc.txt
 dictcalls_s.txt
 dicttest.txt
