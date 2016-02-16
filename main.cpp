@@ -13,7 +13,7 @@ int main() {
     strings.reserve(50000);
 
     // read from dictionary
-    std::ifstream file("../dicttest.txt");
+    std::ifstream file("../dictwords.txt");
     std::string str;
     long total_char = 0;
     long total_word = 0;
@@ -37,18 +37,23 @@ int main() {
     // build the tree
     tst_p::Tree<char,int> tree(cstrings);
 
-    // print statistics
-    cout << "TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
-    cout << "TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
+    std::array<int,2> range = tree.prefix("Ada");
+    cout << range[0] << "," << range[1] << endl;
+    for(int i=range[0]; i <= range[1]; i++)
+        cout << strings[i] << endl;
 
-    cout << cstrings[0] << " have index: " << tree.search(cstrings[0]) << endl;
-
-    tree.compress(tree.getRoot());
-    // print statistics
-    cout << "after compression TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
-    cout << "after compression TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
-
-    cout << cstrings[3] << " have index: " << tree.search(cstrings[3]) << endl;
+//    // print statistics
+//    cout << "TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
+//    cout << "TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
+//
+//    cout << cstrings[0] << " have index: " << tree.search(cstrings[0]) << endl;
+//
+//    tree.compress(tree.getRoot());
+//    // print statistics
+//    cout << "after compression TST have size: " << tree.size(tree.getRoot()) << " byte" << endl;
+//    cout << "after compression TST have " << tree.node_count(tree.getRoot()) << " nodes" << endl;
+//
+//    cout << cstrings[3] << " have index: " << tree.search(cstrings[3]) << endl;
 
     return 0;
 }

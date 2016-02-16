@@ -11,6 +11,8 @@
 
 namespace tst_p {
 
+    // TODO: think about upper case and lower case
+
     template<typename A,typename D>
     class Node {
     public:
@@ -246,18 +248,19 @@ namespace tst_p {
         Node<A,D>* node = search(pref);
 
         if (node != nullptr) {
+
             // all words prefixed by "pref" are in the middle subtree
             if (node->middle != nullptr) {
-                result[0] = node->middle->most_left_index;
+                // inner node
+                result[0] = (node->index != -1) ? node->index : node->middle->most_left_index;
                 result[1] = node->middle->most_right_index;
-            }
-            // if a word end in the node the range start from the target node
-            if (node->index != -1) {
-                result[0] = node->index;
+            } else {
+                // leaf
+                result[0] = node->most_left_index;
+                result[1] = node->most_right_index;
             }
 
             return result;
-
         }
 
         return std::array<D,2> {-1,-1};
