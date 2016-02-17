@@ -115,9 +115,9 @@ namespace tst_p {
             delete child; // the delete is called bottom-up so we do not need a recursive destructor
             return true;
         }
+
         // compression is not possible (this is not a unitary path to leaf)
         return false;
-
     }
 
     // return the size in byte of the tree rooted by node

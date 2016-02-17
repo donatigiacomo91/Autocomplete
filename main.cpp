@@ -5,7 +5,7 @@
 
 #include "TST.h"
 #include "TST_P.h"
-#include "rmmq.hpp"
+#include "Top_K.h"
 
 using namespace std;
 
@@ -76,11 +76,11 @@ int main() {
         scores.push_back(num);
     }
 
-    RMMQ<int> rmmq(scores);
+    top_k::K_Heap heap(scores);
+    std::vector<int> res = heap.get(3,0,15);
+    for(auto i=0;i<res.size();i++)
+        cout << res[i] << endl;
 
-    cout << rmmq.MinPos(11,18) << endl;
-
-    rmmq.destroy();
 
     return 0;
 }
