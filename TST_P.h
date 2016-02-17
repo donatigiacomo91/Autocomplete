@@ -11,8 +11,6 @@
 
 namespace tst_p {
 
-    // TODO: think about upper case and lower case
-
     template<typename A,typename D>
     class Node {
     public:
@@ -47,6 +45,7 @@ namespace tst_p {
 
         void insert(const A*, const D);
         void create(D, D);
+        void destroy(Node<A,D>*);
 
     public:
 
@@ -60,13 +59,28 @@ namespace tst_p {
             return root;
         };
 
-        Tree(std::vector<const A*> &dic){
+        Tree(std::vector<const A*> &dic) {
             dictionary = dic;
             create(0, dic.size());
         }
 
+        ~Tree() {
+            destroy(root);
+        }
+
     };
 
+    // delete all the node of the tree
+    template<typename A,typename D>
+    void Tree<A,D>::destroy(Node<A,D>* node) {
+        if (node == nullptr) {
+            return;
+        }
+        destroy(node->left);
+        destroy(node->middle);
+        destroy(node->right);
+        delete node;
+    }
 
     // TODO: compress also inner unitary path
     // compress the tree rooted in node by
@@ -180,8 +194,8 @@ namespace tst_p {
 
 
         }
-        node->index = dic_index;
 
+        node->index = dic_index;
     };
 
     // create a balanced tree if we start from a sorted dictionary
@@ -242,6 +256,9 @@ namespace tst_p {
 
     }
 
+    // return the index of the minimum and maximum string
+    // prefixed by "pref" in the form [min,max]
+    // return [-1,-1] if "pref" don't belong to the dictionary
     template<typename A,typename D>
     std::array<D,2> Tree<A,D>::prefix(const A* pref) {
         std::array<D,2> result;
@@ -264,7 +281,6 @@ namespace tst_p {
         }
 
         return std::array<D,2> {-1,-1};
-
     }
 
 }

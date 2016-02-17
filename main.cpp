@@ -5,6 +5,7 @@
 
 #include "TST.h"
 #include "TST_P.h"
+#include "rmmq.hpp"
 
 using namespace std;
 
@@ -64,6 +65,22 @@ int main() {
 //    for (int i=1; i<=25481; i++) {
 //        out << dist(rng) << endl;
 //    }
+
+    // read from dictionary
+    std::ifstream file("../dictwords_sc.txt");
+    std::string str;
+    std::vector<int> scores;
+    scores.reserve(25481);
+    while (std::getline(file, str)) {
+        int num = std::stoi(str);
+        scores.push_back(num);
+    }
+
+    RMMQ<int> rmmq(scores);
+
+    cout << rmmq.MinPos(11,18) << endl;
+
+    rmmq.destroy();
 
     return 0;
 }

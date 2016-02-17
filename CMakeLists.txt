@@ -9,6 +9,7 @@ set(SOURCE_FILES
         Trie.h
         TST.h
         TST_P.h
+        rmmq.hpp
         main.cpp)
 
 set(SOURCE_FILES2
