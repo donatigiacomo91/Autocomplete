@@ -9,6 +9,7 @@ set(SOURCE_FILES
         TST_P.h
         rmmq.hpp
         Top_K.h
+        Autocomplete.h
         main.cpp)
 
 set(SOURCE_FILES2

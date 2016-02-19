@@ -17,12 +17,13 @@ namespace top_k {
     // - val is the score of the element
     // - left_index and right_index delimit the range
     //   for the next calls of rmq when element is extracted from heap
+    template <typename S, typename I>
     class Element {
     public:
-        int val;
-        int left_index, index, right_index;
+        S val;
+        I left_index, index, right_index;
 
-        Element(int v, int i, int li, int ri) {
+        Element(S v, I i, I li, I ri) {
             val = v;
             index = i;
             left_index = li;
@@ -40,17 +41,25 @@ namespace top_k {
         return val < e1.val;
     }
 
+    template <typename S, typename I>
     class K_Heap {
 
-        std::vector<int> scores;
-        RMMQ<int> rmmq;
+        std::vector<S> scores;
+        RMMQ<S> rmmq;
 
     public:
 
         // return the indices of the best k scores in the range [i,j]
-        std::vector<int> get(int k, int i, int j);
+        std::vector<I> get(unsigned int k, I i, I j);
 
-        K_Heap (const std::vector<int>& vec) {
+        void make (const std::vector<S>& vec) {
+            scores = vec;
+            rmmq.make(scores);
+        }
+
+        K_Heap() {}
+
+        K_Heap (const std::vector<S>& vec) {
             scores = vec;
             rmmq.make(scores);
         }
@@ -61,14 +70,15 @@ namespace top_k {
 
     };
 
+    template <typename S, typename I>
+    std::vector<I> K_Heap::get(unsigned int k, I i, I j) {
 
-    std::vector<int> K_Heap::get(int k, int i, int j) {
-
-        // max heap that allow top-k retrival
+        // max heap that allow top-k retrieval
         std::priority_queue<Element> max_heap;
         // top-k result in [i,j]
-        std::vector<int> result;
+        std::vector<I> result;
 
+        // we have less than K elements
         if (j-i <= k) {
             for ( ; i<=j; i++) {
                 result.push_back(i);
@@ -76,28 +86,29 @@ namespace top_k {
             return result;
         }
 
+        // push the max in the range
         auto index = rmmq.MaxPos(i,j);
         Element e = Element(scores[index],index,i,j);
         max_heap.push(e);
 
         while (result.size() < k) {
-
+            // get the max in the range
             e = max_heap.top();
             max_heap.pop();
             result.push_back(e.index);
 
+            // get left max and right max
             auto lc = (e.left_index==e.index) ? -1 : rmmq.MaxPos(e.left_index,e.index-1);
             auto rc = (e.right_index==e.index) ? -1 : rmmq.MaxPos(e.index+1,e.right_index);
 
+            // push the children in the heap
             if (lc != -1)
                 max_heap.push(Element(scores[lc],lc,e.left_index,e.index-1));
             if (rc != -1)
                 max_heap.push(Element(scores[rc],rc,e.index+1,e.right_index));
-
         }
 
         return result;
-
     }
 
 }

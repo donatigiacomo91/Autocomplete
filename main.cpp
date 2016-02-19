@@ -56,6 +56,7 @@ int main() {
 //
 //    cout << cstrings[3] << " have index: " << tree.search(cstrings[3]) << endl;
 
+    // THIS GENERATE RANDOM SCORES
 //    std::ofstream out("../ditcwords_sc.txt");
 //    std::mt19937 rng;
 //    rng.seed(std::random_device()());
