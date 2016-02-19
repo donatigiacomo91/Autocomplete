@@ -9,7 +9,7 @@ using namespace std;
 
 void gen_random_score() {
     // CODE THAT GENERATE RANDOM SCORES
-    std::ofstream out("../ditcwords_sc.txt");
+    std::ofstream out("../Data/ditcwords_sc.txt");
     std::mt19937 rng;
     rng.seed(std::random_device()());
     std::uniform_int_distribution<std::mt19937::result_type> dist(1,1000); // distribution in range [1, 1000]
@@ -25,7 +25,7 @@ int main() {
     strings.reserve(25482);
 
     // read word from dictionary
-    std::ifstream words("../dictwords_lc.txt");
+    std::ifstream words("../Data/dictwords_lc.txt");
     long total_char = 0;
     long total_word = 0;
     while (std::getline(words, str)) {
@@ -47,7 +47,7 @@ int main() {
 
 
     // read scores
-    std::ifstream words_score("../dictwords_sc.txt");
+    std::ifstream words_score("../Data/dictwords_sc.txt");
     std::vector<int> scores;
     scores.reserve(25482);
     while (std::getline(words_score, str)) {
