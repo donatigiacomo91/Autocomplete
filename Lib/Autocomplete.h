@@ -17,13 +17,15 @@ namespace atl {
     class Autocomplete {
 
         tst_p::Tree<A,I> tst;
-        top_k::K_Heap<S,I> k_max;
+        top_k::Selector<S,I> k_max;
 
     public:
 
         Autocomplete(const std::vector<const A*>& dic, const std::vector<S>& sc) {
+            // build and compress the ternary search tree
             tst.make(dic);
             tst.compress(tst.getRoot());
+            // initialize the top-k selector data structures
             k_max.make(sc);
         }
 

@@ -11,6 +11,11 @@
 
 #include "rmmq.hpp"
 
+// TOP-K SELECTOR WITH RMQ DATA STRUCTURES
+//
+// top-k selection in O(k log k) using priority queue and range maximum query
+// RMQ is build in O(n log n) and return the max in constant time
+
 namespace top_k {
 
     // element to be stored in the max heap :
@@ -31,10 +36,6 @@ namespace top_k {
         }
 
         bool operator<(const Element<S,I>& e1) const;
-        Element<S,I> ( const Element<S,I> & ) = default;
-        Element<S,I>& operator=( const Element<S,I> & ) = default;
-        Element<S,I> ( Element<S,I> && ) = default;
-
     };
 
     template <typename S, typename I>
@@ -43,36 +44,39 @@ namespace top_k {
     }
 
     template <typename S, typename I>
-    class K_Heap {
+    class Selector {
 
         std::vector<S> scores;
         RMMQ<S> rmmq;
 
     public:
 
+        // initialize RMMQ with the passed vector
+        void make (const std::vector<S>& vec);
         // return the indices of the best k scores in the range [i,j]
         std::vector<I> get(unsigned int k, I i, I j);
 
-        void make (const std::vector<S>& vec) {
+        Selector() {}
+
+        Selector (const std::vector<S>& vec) {
             scores = vec;
             rmmq.make(scores);
         }
 
-        K_Heap() {}
-
-        K_Heap (const std::vector<S>& vec) {
-            scores = vec;
-            rmmq.make(scores);
-        }
-
-        ~K_Heap () {
+        ~Selector () {
             rmmq.destroy();
         }
 
     };
 
     template <typename S, typename I>
-    std::vector<I> K_Heap<S,I>::get(unsigned int k, I i, I j) {
+    void Selector<S,I>::make (const std::vector<S>& vec) {
+        scores = vec;
+        rmmq.make(scores);
+    }
+
+    template <typename S, typename I>
+    std::vector<I> Selector<S,I>::get(unsigned int k, I i, I j) {
 
         // max heap that allow top-k retrieval
         std::priority_queue<Element<S,I>> max_heap;

@@ -9,6 +9,12 @@
 #include <vector>
 #include <string.h>
 
+// COMPRESSED - TERNARY SEARCH TREE DATA STRUCTURES
+// A is the type of the alphabet used by the dictionary words
+// D is the type used to index the word in the dictionary
+//
+// prefix search in O(P + log n) starting from a sorted dictionary
+
 namespace tst_p {
 
     template<typename A,typename D>
@@ -55,6 +61,7 @@ namespace tst_p {
         size_t size(Node<A,D>*);
         long node_count(Node<A,D>*);
 
+        // get a dictionary and build the tree
         void make(const std::vector<const A*> &dic) {
             dictionary = dic;
             create(0, dic.size());
@@ -66,6 +73,7 @@ namespace tst_p {
 
         Tree() {}
 
+        // get a dictionary and build the tree
         Tree(const std::vector<const A*> &dic) {
             dictionary = dic;
             create(0, dic.size());
@@ -77,7 +85,7 @@ namespace tst_p {
 
     };
 
-    // delete all the node of the tree
+    // delete all the node of the tree rooted by node
     template<typename A,typename D>
     void Tree<A,D>::destroy(Node<A,D>* node) {
         if (node == nullptr) {
@@ -142,7 +150,7 @@ namespace tst_p {
         return node->size() + size(node->left) + size(node->middle) + size(node->right);
     }
 
-    // return the number of nodes of the subtree rooted in "node"
+    // return the number of nodes of the tree rooted by node
     template<typename A,typename D>
     long Tree<A,D>::node_count(Node<A,D>* node) {
 
@@ -157,7 +165,7 @@ namespace tst_p {
         return 1 + node_count(node->left) + node_count(node->middle) + node_count(node->right);
     }
 
-    // insert a word in the tree
+    // insert word in the tree
     template<typename A,typename D>
     void Tree<A,D>::insert(const A* word, const D dic_index) {
 
