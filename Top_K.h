@@ -30,14 +30,15 @@ namespace top_k {
             right_index = ri;
         }
 
-        bool operator<(const Element& e1) const;
-        Element ( const Element & ) = default;
-        Element& operator=( const Element & ) = default;
-        Element ( Element && ) = default;
+        bool operator<(const Element<S,I>& e1) const;
+        Element<S,I> ( const Element<S,I> & ) = default;
+        Element<S,I>& operator=( const Element<S,I> & ) = default;
+        Element<S,I> ( Element<S,I> && ) = default;
 
     };
 
-    bool Element::operator<(const Element& e1) const {
+    template <typename S, typename I>
+    bool Element<S,I>::operator<(const Element<S,I>& e1) const {
         return val < e1.val;
     }
 
@@ -71,10 +72,10 @@ namespace top_k {
     };
 
     template <typename S, typename I>
-    std::vector<I> K_Heap::get(unsigned int k, I i, I j) {
+    std::vector<I> K_Heap<S,I>::get(unsigned int k, I i, I j) {
 
         // max heap that allow top-k retrieval
-        std::priority_queue<Element> max_heap;
+        std::priority_queue<Element<S,I>> max_heap;
         // top-k result in [i,j]
         std::vector<I> result;
 
@@ -88,7 +89,7 @@ namespace top_k {
 
         // push the max in the range
         auto index = rmmq.MaxPos(i,j);
-        Element e = Element(scores[index],index,i,j);
+        Element<S,I> e = Element<S,I>(scores[index],index,i,j);
         max_heap.push(e);
 
         while (result.size() < k) {
@@ -103,9 +104,9 @@ namespace top_k {
 
             // push the children in the heap
             if (lc != -1)
-                max_heap.push(Element(scores[lc],lc,e.left_index,e.index-1));
+                max_heap.push(Element<S,I>(scores[lc],lc,e.left_index,e.index-1));
             if (rc != -1)
-                max_heap.push(Element(scores[rc],rc,e.index+1,e.right_index));
+                max_heap.push(Element<S,I>(scores[rc],rc,e.index+1,e.right_index));
         }
 
         return result;

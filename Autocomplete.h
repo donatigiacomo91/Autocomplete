@@ -10,8 +10,6 @@
 
 namespace atl {
 
-    //TODO: pass all parameaters as const &
-
     // A is the type used for the alphabet of the dictionary
     // S is the type used for the scores
     // I is the type used for index scores and dictionary
@@ -23,7 +21,7 @@ namespace atl {
 
     public:
 
-        Autocomplete(std::vector<const A*>& dic, const std::vector<S>& sc) {
+        Autocomplete(const std::vector<const A*>& dic, const std::vector<S>& sc) {
             tst.make(dic);
             tst.compress(tst.getRoot());
             k_max.make(sc);

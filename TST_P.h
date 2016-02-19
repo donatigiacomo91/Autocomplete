@@ -54,7 +54,8 @@ namespace tst_p {
         bool compress(Node<A,D>*);
         size_t size(Node<A,D>*);
         long node_count(Node<A,D>*);
-        void make(std::vector<const A*> &dic) {
+
+        void make(const std::vector<const A*> &dic) {
             dictionary = dic;
             create(0, dic.size());
         }
@@ -65,7 +66,7 @@ namespace tst_p {
 
         Tree() {}
 
-        Tree(std::vector<const A*> &dic) {
+        Tree(const std::vector<const A*> &dic) {
             dictionary = dic;
             create(0, dic.size());
         }
