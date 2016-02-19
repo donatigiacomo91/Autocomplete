@@ -30,6 +30,9 @@ namespace top_k {
         }
 
         bool operator<(const Element& e1) const;
+        Element ( const Element & ) = default;
+        Element& operator=( const Element & ) = default;
+        Element ( Element && ) = default;
 
     };
 
@@ -40,49 +43,51 @@ namespace top_k {
     class K_Heap {
 
         std::vector<int> scores;
-        RMMQ<int>* rmmq;
+        RMMQ<int> rmmq;
 
     public:
 
         // return the indices of the best k scores in the range [i,j]
         std::vector<int> get(int k, int i, int j);
 
-        K_Heap (std::vector<int>& vec) {
+        K_Heap (const std::vector<int>& vec) {
             scores = vec;
-            rmmq = new RMMQ<int>(scores);
+            rmmq.make(scores);
         }
 
         ~K_Heap () {
-            rmmq->destroy();
+            rmmq.destroy();
         }
 
     };
 
-    // TODO: manage special case ex: j-i<k
+
     std::vector<int> K_Heap::get(int k, int i, int j) {
 
         // max heap that allow top-k retrival
         std::priority_queue<Element> max_heap;
         // top-k result in [i,j]
         std::vector<int> result;
-        result.reserve(k);
 
         if (j-i <= k) {
-            // TODO
+            for ( ; i<=j; i++) {
+                result.push_back(i);
+            }
             return result;
         }
 
-        auto index = rmmq->MaxPos(i,j);
-        max_heap.push(Element(scores[index],index,i,j));
+        auto index = rmmq.MaxPos(i,j);
+        Element e = Element(scores[index],index,i,j);
+        max_heap.push(e);
 
         while (result.size() < k) {
 
-            Element e = max_heap.top();
+            e = max_heap.top();
             max_heap.pop();
             result.push_back(e.index);
 
-            auto lc = (e.left_index==e.index) ? -1 : rmmq->MaxPos(e.left_index,e.index-1);
-            auto rc = (e.right_index==e.index) ? -1 : rmmq->MaxPos(e.index+1,e.right_index);
+            auto lc = (e.left_index==e.index) ? -1 : rmmq.MaxPos(e.left_index,e.index-1);
+            auto rc = (e.right_index==e.index) ? -1 : rmmq.MaxPos(e.index+1,e.right_index);
 
             if (lc != -1)
                 max_heap.push(Element(scores[lc],lc,e.left_index,e.index-1));

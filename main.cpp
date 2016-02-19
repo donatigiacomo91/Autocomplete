@@ -3,8 +3,6 @@
 #include <fstream>
 #include <random>
 
-#include "TST.h"
-#include "TST_P.h"
 #include "Top_K.h"
 
 using namespace std;
@@ -77,7 +75,7 @@ int main() {
     }
 
     top_k::K_Heap heap(scores);
-    std::vector<int> res = heap.get(3,0,15);
+    std::vector<int> res = heap.get(5,0,100);
     for(auto i=0;i<res.size();i++)
         cout << res[i] << endl;
 
