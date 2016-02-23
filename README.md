@@ -8,9 +8,9 @@ Autocomplete system based on a compressed ternary serch tree with range maximum 
 
 ####Issue:
 
-- Use of object and pointer insted of use of fixed size array to store the tree.
-- Construction algorithm build the tree then compress it, insted of build a compressed tree.
-- Compress function compress only unitary path to leaf and not inner unitary path.
+- Use of object and pointer insted of use of fixed size array to store the tree. (hard to fix)
+- Construction algorithm build the tree then compress it, insted of build a compressed tree. (hard to fix)
+- Compress function compress only unitary path to leaf and not inner unitary path. (medium/easy to fix)
 
 
 ####Possible Improvement:
