@@ -43,7 +43,7 @@ namespace tst {
 
     public:
 
-        Tree(std::vector<const A*>&);
+        Tree(std::vector<const A*>&, std::vector<Node<A,P,D>*>&);
         D search(const A*);
         std::array<D,2> prefix(const A* pref);
         size_t size();
@@ -51,8 +51,10 @@ namespace tst {
     };
 
     template<typename A, typename P, typename D>
-    Tree<A,P,D>::Tree<A,P,D>(std::vector<const A*>& dic) {
+    Tree<A,P,D>::Tree<A,P,D>(std::vector<const A*>& dic, std::vector<Node<A,P,D>*>& vector1) {
         dictionary = dic;
+        vec = vector1;
+        // vec must be build from
     };
 
     // return the size in byte of the whole tree

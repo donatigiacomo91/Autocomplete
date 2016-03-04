@@ -7,6 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/Users/giacomo/Desktop/Code/Autocomplete/Bin
 
 set(SOURCE_FILES
         Lib/TST_P.h
+        Lib/TST.h
         Lib/rmmq.hpp
         Lib/Top_K.h
         Lib/Autocomplete.h

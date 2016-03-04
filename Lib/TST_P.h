@@ -8,6 +8,9 @@
 #include <array>
 #include <vector>
 #include <string.h>
+#include <math.h>
+
+#include "TST.h"
 
 // COMPRESSED - TERNARY SEARCH TREE DATA STRUCTURES
 // A is the type of the alphabet used by the dictionary words
@@ -65,6 +68,8 @@ namespace tst_p {
         size_t size(Node<A,D>*);
         long node_count(Node<A,D>*);
 
+        tst::Tree to_vector();
+
         // get a dictionary and build the tree
         void make(const std::vector<const A*> &dic) {
             dictionary = dic;
@@ -88,6 +93,37 @@ namespace tst_p {
         }
 
     };
+
+    template <typename A, typename P, typename D>
+    tst::Tree<A,P,D> build_vector_tree(long size, std::vector<const A*>& dic) {
+
+        std::vector<tst::Node<A,P,D>*> vector;
+
+        // visit the tree and fill the vector converting from pointer to indices
+
+        return tst::Tree<A,P,D>(dic, vector);
+
+    };
+
+    template <typename A, typename D>
+    tst::Tree Tree<A,D>::to_vector() {
+
+        long node_num = node_count(root);
+        double index_bit = log2(node_num);
+
+        if (index_bit <= 8) {
+            return build_vector_tree<A,u_int8_t,D>(node_num, dictionary);
+        } else if (index_bit <= 16) {
+            return build_vector_tree<A,u_int16_t,D>(node_num, dictionary);
+        } else if (index_bit <= 32) {
+            return build_vector_tree<A,u_int32_t,D>(node_num, dictionary);
+        } else if (index_bit <= 64) {
+            return build_vector_tree<A,u_int64_t,D>(node_num, dictionary);
+        } else {
+            return nullptr;
+        }
+
+    }
 
     // delete all the node of the tree rooted by node
     template<typename A,typename D>
