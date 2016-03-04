@@ -20,10 +20,14 @@ namespace tst_p {
     template<typename A,typename D>
     class Node {
     public:
+        // node character
         A character;
+        // index in the dictionary of the word that end in the node (-1 if no word end in the node)
         D index;
+        // child pointers
         Node<A,D> *left, *middle, *right;
 
+        // additional info to support prefix_search in the same time of search
         D most_left_index;
         D most_right_index;
 
