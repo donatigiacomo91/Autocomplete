@@ -68,8 +68,6 @@ namespace tst_p {
         size_t size(Node<A,D>*);
         long node_count(Node<A,D>*);
 
-        tst::Tree to_vector();
-
         // get a dictionary and build the tree
         void make(const std::vector<const A*> &dic) {
             dictionary = dic;
@@ -93,37 +91,6 @@ namespace tst_p {
         }
 
     };
-
-    template <typename A, typename P, typename D>
-    tst::Tree<A,P,D> build_vector_tree(long size, std::vector<const A*>& dic) {
-
-        std::vector<tst::Node<A,P,D>*> vector;
-
-        // visit the tree and fill the vector converting from pointer to indices
-
-        return tst::Tree<A,P,D>(dic, vector);
-
-    };
-
-    template <typename A, typename D>
-    tst::Tree Tree<A,D>::to_vector() {
-
-        long node_num = node_count(root);
-        double index_bit = log2(node_num);
-
-        if (index_bit <= 8) {
-            return build_vector_tree<A,u_int8_t,D>(node_num, dictionary);
-        } else if (index_bit <= 16) {
-            return build_vector_tree<A,u_int16_t,D>(node_num, dictionary);
-        } else if (index_bit <= 32) {
-            return build_vector_tree<A,u_int32_t,D>(node_num, dictionary);
-        } else if (index_bit <= 64) {
-            return build_vector_tree<A,u_int64_t,D>(node_num, dictionary);
-        } else {
-            return nullptr;
-        }
-
-    }
 
     // delete all the node of the tree rooted by node
     template<typename A,typename D>
@@ -337,6 +304,46 @@ namespace tst_p {
 
         return std::array<D,2> {-1,-1};
     }
+
+    // PURE FUNCTIONAL EXTENSION
+
+    template <typename A, typename P, typename D>
+    long convert(std::vector<tst::Node<A,P,D>*>& dest, Node<A,D>* node) {
+
+        if (node == nullptr)
+            return 0;
+
+        // convert node
+        tst::Node<A,P,D>* new_node = new tst::Node<A,P,D>();
+        new_node->character = node->character;
+        new_node->index = node->index;
+        new_node->most_left_index = node->most_left_index;
+        new_node->most_right_index = node->most_right_index;
+
+        // add to vector
+        dest.push_back(new_node);
+        long index = dest.size()-1;
+
+        new_node->left = convert(dest, node->left);
+        new_node->middle = convert(dest, node->middle);
+        new_node->right = convert(dest, node->right);
+
+        return index;
+    };
+
+    template <typename A, typename P, typename D>
+    tst::Tree<A,P,D> build_vector_tree(long size, std::vector<const A*>& dic, Node<A,D>* root) {
+
+        std::vector<tst::Node<A,P,D>*> vector;
+        vector.reserve(size+1);
+        // index zero is reserved for "no child semantic"
+        vector.push_back(nullptr);
+
+        // visit the tree and fill the vector converting from pointer to indices
+        convert(vector, root);
+
+        return tst::Tree<A,P,D>(dic, vector);
+    };
 
 }
 
